@@ -1,55 +1,120 @@
-name: Radish BDD Tests
+name: Quality Platform CI
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  push: { branches: [ main ] }
+  pull_request: { branches: [ main ] }
   workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1-5"  # nightly
+    - cron: "0 3 * * 0"    # weekly
 
 jobs:
-  radish-tests:
-    runs-on: ubuntu-latest
+  quality-tests:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - suite: web
+            runner: ubuntu-latest
+          - suite: api
+            runner: ubuntu-latest
+          - suite: mobile
+            runner: self-hosted
+
+    env:
+      ENV: qa
+      WEB_BASE_URL: https://rahulshettyacademy.com/loginpagePractise/
+      WEB_USERNAME: rahulshettyacademy
+      WEB_PASSWORD: ${{ secrets.WEB_PASSWORD }}
+      HEADLESS: true
+      RADISH_TAGS: "@smoke and not @flaky"
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/cache@v4
         with:
-          python-version: "3.11"
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
 
-      - name: Install dependencies
+      - name: Install deps + CLI
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install -e .
 
-      - name: Run Radish BDD tests
+      - name: Prepare dirs
         run: |
-          mkdir -p reports
-          radish features/web --junit-xml=reports/junit.xml
+          mkdir -p reports allure-results
 
-      # ✅ Upload JUnit XML (for trends & dashboards)
-      - name: Upload JUnit results
-        uses: actions/upload-artifact@v4
-        with:
-          name: junit-results
-          path: reports/junit.xml
+      - name: Impact analysis (ML-ranked)
+        run: quality impact || true
 
-      # ✅ Upload screenshots (failure evidence)
-      - name: Upload screenshots
+      - name: Quality run (${{ matrix.suite }})
+        run: |
+          quality run --suite ${{ matrix.suite }} --tags "${{ env.RADISH_TAGS }}"
+
+      - name: Quality gate
+        run: quality gate
+
+      - name: Upload JUnit
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: screenshots
-          path: reports/screenshots
+          name: junit-${{ matrix.suite }}
+          path: reports/junit-${{ matrix.suite }}.xml
 
-      # ✅ Native GitHub test summary (TREND ENABLED)
-      - name: Publish Test Report
-        uses: dorny/test-reporter@v1
-        if: always()
+      - name: Slack notify (failure)
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{\"text\":\"❌ Quality failure • ${{ matrix.suite }} • Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+          ${{ secrets.SLACK_WEBHOOK }}
+
+  quality-report:
+    needs: quality-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: artifacts }
+
+      - name: Install Allure
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre
+          curl -Ls -o allure.tgz https://github.com/allure-framework/allure2/releases/latest/download/allure-2.27.0.tgz
+          tar -zxvf allure.tgz
+          sudo mv allure-2.27.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+
+      - name: Generate reports (platform)
+        run: |
+          quality report
+          quality leadership
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: Radish BDD Report
-          path: reports/junit.xml
-          reporter: java-junit
+          name: allure-report
+          path: allure-report
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: leadership-report
+          path: quality/leadership_report.txt
+
+      - name: Deploy Allure (main only)
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+
+      - name: Slack summary (success)
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{\"text\":\"✅ Quality passed • Allure: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/\"}" \
+          ${{ secrets.SLACK_WEBHOOK }}

@@ -1,3 +1,4 @@
+@smoke @regression
 Feature: Web Login
 
 Scenario: Successful login with valid credentials
