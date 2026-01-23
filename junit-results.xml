@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites time="20.038">
+  <testsuite name="Web Login" failures="0" errors="0" skipped="0" tests="1" time="20.038">
+    <testcase classname="Web Login" name="Successful login with valid credentials" time="17.681"/>
+  </testsuite>
+</testsuites>

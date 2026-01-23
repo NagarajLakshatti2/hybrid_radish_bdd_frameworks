@@ -1,0 +1,7 @@
+-r requirements-web.txt
+-r requirements-api.txt
+-r requirements-reporting.txt
+
+pluggy==1.6.0
+cffi==2.0.0
+pycparser==3.0
