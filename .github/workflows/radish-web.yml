@@ -207,5 +207,6 @@ jobs:
         if: success()
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data "{\"text\":\"✅ Quality passed • Allure: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/\"}" \
-          ${{ secrets.SLACK_WEBHOOK }}
+            --data "{\"text\":\"✅ Quality passed • Allure: https://NagarajLakshatti2.github.io/hybrid_radish_bdd_frameworks/\"}" \
+            ${{ secrets.SLACK_WEBHOOK }}
+      
