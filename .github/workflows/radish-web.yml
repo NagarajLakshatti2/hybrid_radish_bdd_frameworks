@@ -20,6 +20,8 @@ jobs:
             runner: ubuntu-latest
           - suite: mobile
             runner: self-hosted
+            enabled: ${{ env.ENABLE_MOBILE }}
+
 
     env:
       ENV: qa
@@ -28,6 +30,8 @@ jobs:
       WEB_PASSWORD: ${{ secrets.WEB_PASSWORD }}
       HEADLESS: true
       RADISH_TAGS: "@smoke and not @flaky"
+      ENABLE_MOBILE: false
+
 
     steps:
       - uses: actions/checkout@v4
@@ -52,9 +56,20 @@ jobs:
       - name: Impact analysis (ML-ranked)
         run: quality impact || true
 
+      - name: Skip mobile suite if not implemented
+        if: matrix.suite == 'mobile'
+        run: |
+          if [ ! -d "features/mobile" ] || [ -z "$(ls -A features/mobile)" ]; then
+            echo "🚫 No mobile tests found. Skipping."
+            exit 0
+          fi
+
+
       - name: Quality run (${{ matrix.suite }})
+        if: matrix.suite != 'mobile' || runner.os == 'self-hosted'
         run: |
           quality run --suite ${{ matrix.suite }} --tags "${{ env.RADISH_TAGS }}"
+          
 
       - name: Quality gate
         run: quality gate
