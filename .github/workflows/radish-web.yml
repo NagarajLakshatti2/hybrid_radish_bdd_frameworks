@@ -176,6 +176,20 @@ jobs:
           allure --version
       
 
+
+      - name: Restore Allure history
+        run: |
+          if [ -d ".git" ]; then rm -rf .git; fi
+          git clone --branch gh-pages https://github.com/${{ github.repository }}.git gh-pages || true
+
+          if [ -d "gh-pages/history" ]; then
+            echo "✅ Restoring Allure history"
+            mkdir -p merged-results/history
+            cp -r gh-pages/history/* merged-results/history/
+          else
+            echo "ℹ️ No previous history found"
+          fi
+
       # 7.4️⃣ Generate platform reports and
       - name: Generate Allure report
         run: |
@@ -202,6 +216,13 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-report
 
+      # 7.9️⃣ Print Allure report URL
+      - name: Print Allure URL
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "📊 Allure Report:"
+          echo "https://NagarajLakshatti2.github.io/hybrid_radish_bdd_frameworks/"
+
       # 7.8️⃣ Slack success notification
       - name: Slack summary (success)
         if: success()
@@ -209,4 +230,3 @@ jobs:
           curl -X POST -H 'Content-type: application/json' \
             --data "{\"text\":\"✅ Quality passed • Allure: https://NagarajLakshatti2.github.io/hybrid_radish_bdd_frameworks/\"}" \
             ${{ secrets.SLACK_WEBHOOK }}
-      
