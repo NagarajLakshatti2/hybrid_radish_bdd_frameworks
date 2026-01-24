@@ -1,61 +1,85 @@
+# 1️⃣ Workflow name
 name: Quality Platform CI
 
+
+# 2️⃣ Workflow triggers
 on:
-  push: { branches: [ main ] }
-  pull_request: { branches: [ main ] }
+  push:
+    branches: [ main ]
+
+  pull_request:
+    branches: [ main ]
+
   workflow_dispatch:
+
   schedule:
-    - cron: "0 2 * * 1-5"  # nightly
-    - cron: "0 3 * * 0"    # weekly
+    - cron: "0 2 * * 1-5"   # nightly
+    - cron: "0 3 * * 0"     # weekly
+
 
 jobs:
+  # 3️⃣ Quality test execution job
   quality-tests:
     runs-on: ${{ matrix.runner }}
+
+    # 4️⃣ Test matrix definition
     strategy:
       matrix:
         include:
           - suite: web
             runner: ubuntu-latest
+
           - suite: api
             runner: ubuntu-latest
+
           - suite: mobile
             runner: self-hosted
             enabled: ${{ env.ENABLE_MOBILE }}
 
-
+    # 5️⃣ Global environment configuration
     env:
       ENV: qa
+      HEADLESS: true
+      ENABLE_MOBILE: false
+      RADISH_TAGS: "@smoke and not @flaky"
+
       WEB_BASE_URL: https://rahulshettyacademy.com/loginpagePractise/
       WEB_USERNAME: rahulshettyacademy
       WEB_PASSWORD: ${{ secrets.WEB_PASSWORD }}
-      HEADLESS: true
-      RADISH_TAGS: "@smoke and not @flaky"
-      ENABLE_MOBILE: false
 
-
+    # 6️⃣ Job steps
     steps:
+      # 6.1️⃣ Checkout source code
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
 
+      # 6.2️⃣ Setup Python runtime
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # 6.3️⃣ Cache pip dependencies
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
 
+      # 6.4️⃣ Install dependencies and CLI
       - name: Install deps + CLI
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -e .
 
+      # 6.5️⃣ Prepare report directories
       - name: Prepare dirs
         run: |
           mkdir -p reports allure-results
 
+      # 6.6️⃣ Impact analysis (non-blocking)
       - name: Impact analysis (ML-ranked)
         run: quality impact || true
 
+      # 6.7️⃣ Skip mobile suite if not implemented
       - name: Skip mobile suite if not implemented
         if: matrix.suite == 'mobile'
         run: |
@@ -64,16 +88,17 @@ jobs:
             exit 0
           fi
 
-
+      # 6.8️⃣ Execute quality test suite
       - name: Quality run (${{ matrix.suite }})
         if: matrix.suite != 'mobile' || runner.os == 'self-hosted'
         run: |
           quality run --suite ${{ matrix.suite }} --tags "${{ env.RADISH_TAGS }}"
-          
 
+      # 6.9️⃣ Quality gate enforcement
       - name: Quality gate
         run: quality gate
 
+      # 6.🔟 Upload JUnit results
       - name: Upload JUnit
         if: always()
         uses: actions/upload-artifact@v4
@@ -81,6 +106,7 @@ jobs:
           name: junit-${{ matrix.suite }}
           path: reports/junit-${{ matrix.suite }}.xml
 
+      # 6.1️⃣1️⃣ Slack notification on failure
       - name: Slack notify (failure)
         if: failure()
         run: |
@@ -88,14 +114,22 @@ jobs:
           --data "{\"text\":\"❌ Quality failure • ${{ matrix.suite }} • Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
           ${{ secrets.SLACK_WEBHOOK }}
 
+
+  # 7️⃣ Reporting and publishing job
   quality-report:
     needs: quality-tests
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with: { path: artifacts }
 
+    steps:
+      # 7.1️⃣ Checkout source
+      - uses: actions/checkout@v4
+
+      # 7.2️⃣ Download test artifacts
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      # 7.3️⃣ Install Allure CLI
       - name: Install Allure
         run: |
           sudo apt-get update
@@ -105,21 +139,25 @@ jobs:
           sudo mv allure-2.27.0 /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
+      # 7.4️⃣ Generate platform reports
       - name: Generate reports (platform)
         run: |
           quality report
           quality leadership
 
+      # 7.5️⃣ Upload Allure report
       - uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
 
+      # 7.6️⃣ Upload leadership report
       - uses: actions/upload-artifact@v4
         with:
           name: leadership-report
           path: quality/leadership_report.txt
 
+      # 7.7️⃣ Deploy Allure report (main branch only)
       - name: Deploy Allure (main only)
         if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
@@ -127,6 +165,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-report
 
+      # 7.8️⃣ Slack success notification
       - name: Slack summary (success)
         if: success()
         run: |
