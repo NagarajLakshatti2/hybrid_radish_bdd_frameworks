@@ -217,7 +217,7 @@ jobs:
 
       # 7.9️⃣ Print Allure report URL
       - name: Print Allure URL
-        if: github.ref == 'refs/heads/main'
+        if: success()
         run: |
           echo "📊 Allure Report:"
           echo "https://NagarajLakshatti2.github.io/hybrid_radish_bdd_frameworks/"
