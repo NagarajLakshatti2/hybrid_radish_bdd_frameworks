@@ -74,6 +74,13 @@ jobs:
         run: |
           mkdir -p reports allure-results
 
+      - name: Skip mobile suite if disabled
+        if: matrix.suite == 'mobile' && env.ENABLE_MOBILE != 'true'
+        run: |
+          echo "🚫 Mobile suite disabled. Skipping."
+          exit 0
+      
+
       # 6.6️⃣ Impact analysis (non-blocking)
       - name: Impact analysis (ML-ranked)
         run: quality impact || true
