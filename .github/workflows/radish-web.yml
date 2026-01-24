@@ -16,6 +16,8 @@ on:
     - cron: "0 2 * * 1-5"   # nightly
     - cron: "0 3 * * 0"     # weekly
 
+permissions:
+  contents: write
 
 jobs:
   # 3️⃣ Quality test execution job
@@ -81,10 +83,6 @@ jobs:
           exit 0
       
 
-      # 6.6️⃣ Impact analysis (non-blocking)
-      - name: Impact analysis (ML-ranked)
-        run: quality impact || true
-
       # 6.7️⃣ Skip mobile suite if not implemented
       - name: Skip mobile suite if not implemented
         if: matrix.suite == 'mobile'
@@ -110,6 +108,14 @@ jobs:
       - name: Quality gate
         run: quality gate
 
+      - name: Generate leadership summary
+        run: |
+          echo "Suite execution summary" > leadership_report.txt
+          echo "Run ID: ${{ github.run_id }}" >> leadership_report.txt
+          echo "Branch: ${{ github.ref_name }}" >> leadership_report.txt
+          echo "Triggered by: ${{ github.actor }}" >> leadership_report.txt
+      
+
       # 6.🔟 Upload JUnit results
       - name: Upload JUnit
         if: always()
@@ -126,6 +132,12 @@ jobs:
           --data "{\"text\":\"❌ Quality failure • ${{ matrix.suite }} • Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
           ${{ secrets.SLACK_WEBHOOK }}
 
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.suite }}
+          path: allure-results
 
   # 7️⃣ Reporting and publishing job
   quality-report:
@@ -135,6 +147,16 @@ jobs:
     steps:
       # 7.1️⃣ Checkout source
       - uses: actions/checkout@v4
+
+      - name: Download Allure results
+        uses: actions/download-artifact@v4
+        with:
+          path: allure-results
+
+      - name: Merge Allure results
+        run: |
+          mkdir merged-results
+          find allure-results -type f -exec cp {} merged-results \;
 
       # 7.2️⃣ Download test artifacts
       - uses: actions/download-artifact@v4
@@ -158,10 +180,6 @@ jobs:
       - name: Generate Allure report
         run: |
           allure generate allure-results --clean -o allure-report
-
-      - name: Generate Allure report
-        run: |
-          allure generate allure-results --clean -o allure-report
           
 
       # 7.5️⃣ Upload Allure report
@@ -175,14 +193,6 @@ jobs:
         with:
           name: leadership-report
           path: quality/leadership_report.txt
-
-      - name: Generate leadership summary
-        run: |
-          echo "Suite execution summary" > leadership_report.txt
-          echo "Run ID: ${{ github.run_id }}" >> leadership_report.txt
-          echo "Branch: ${{ github.ref_name }}" >> leadership_report.txt
-          echo "Triggered by: ${{ github.actor }}" >> leadership_report.txt
-
 
       # 7.7️⃣ Deploy Allure report (main branch only)
       - name: Deploy Allure (main only)
