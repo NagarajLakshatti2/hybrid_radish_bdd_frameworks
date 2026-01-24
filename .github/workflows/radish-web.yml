@@ -74,10 +74,10 @@ jobs:
         run: |
           mkdir -p reports allure-results
 
-      - name: Skip mobile suite if disabled
-        if: matrix.suite == 'mobile' && env.ENABLE_MOBILE != 'true'
+      - name: Skip mobile if no tests
+        if: matrix.suite == 'mobile' && hashFiles('features/mobile/**') == ''
         run: |
-          echo "🚫 Mobile suite disabled. Skipping."
+          echo "🚫 No mobile tests yet. Skipping."
           exit 0
       
 
@@ -93,6 +93,12 @@ jobs:
             echo "🚫 No mobile tests found. Skipping."
             exit 0
           fi
+
+      - name: Skip mobile unless enabled
+        if: matrix.suite == 'mobile' && github.event.inputs.run_mobile != 'true'
+        run: |
+          echo "🚫 Mobile disabled via workflow input"
+          exit 0
 
       # 6.8️⃣ Execute quality test suite
       - name: Quality run (${{ matrix.suite }})
