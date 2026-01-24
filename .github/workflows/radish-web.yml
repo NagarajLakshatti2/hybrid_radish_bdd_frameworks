@@ -34,7 +34,6 @@ jobs:
 
           - suite: mobile
             runner: self-hosted
-            enabled: ${{ env.ENABLE_MOBILE }}
 
     # 5️⃣ Global environment configuration
     env:
