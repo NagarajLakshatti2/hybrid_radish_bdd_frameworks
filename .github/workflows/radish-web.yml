@@ -33,7 +33,7 @@ jobs:
             runner: ubuntu-latest
 
           - suite: mobile
-            runner: self-hosted
+            runner: self-latest
 
     # 5️⃣ Global environment configuration
     env:
@@ -102,7 +102,7 @@ jobs:
 
       # 6.8️⃣ Execute quality test suite
       - name: Quality run (${{ matrix.suite }})
-        if: matrix.suite != 'mobile' || runner.os == 'self-hosted'
+        if: matrix.suite != 'mobile' || runner.os == 'self-latest'
         run: |
           quality run --suite ${{ matrix.suite }} --tags "${{ env.RADISH_TAGS }}"
 
