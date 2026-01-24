@@ -33,7 +33,7 @@ jobs:
             runner: ubuntu-latest
 
           - suite: mobile
-            runner: self-latest
+            runner: ubuntu-latest
 
     # 5️⃣ Global environment configuration
     env:
