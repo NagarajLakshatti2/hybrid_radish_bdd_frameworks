@@ -1,0 +1,2 @@
+[console_scripts]
+quality = quality_cli.cli:app
