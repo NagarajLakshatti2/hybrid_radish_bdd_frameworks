@@ -1,4 +1,4 @@
-from radish.hooks import before, after
+from radish import before, after
 from utils.browser import get_web_driver
 from utils.screenshot import save_screenshot
 
@@ -16,7 +16,5 @@ def stop_browser(scenario, **kwargs):
         try:
             if scenario.failed:
                 save_screenshot(driver, scenario.name)
-        except Exception:
-            pass
         finally:
             driver.quit()
