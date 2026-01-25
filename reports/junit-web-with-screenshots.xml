@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites time="22.582">
+  <testsuite name="Web Login" failures="0" errors="0" skipped="0" tests="1" time="22.582">
+    <testcase classname="Web Login" name="Successful login with valid credentials" time="16.309"><system-out>reports/screenshots\scenario_end_Successful_login_with_valid_credentials_20260125_011440.png
+reports/screenshots\scenario_end_Successful_login_with_valid_credentials_20260125_012055.png
+reports/screenshots\scenario_start_Successful_login_with_valid_credentials_20260125_011427.png
+reports/screenshots\scenario_start_Successful_login_with_valid_credentials_20260125_012041.png</system-out></testcase>
+  </testsuite>
+</testsuites>

@@ -1,6 +1,103 @@
 <?xml version='1.0' encoding='utf-8'?>
-<testsuites time="36.401">
-  <testsuite name="Web Login" failures="0" errors="0" skipped="0" tests="1" time="36.401">
-    <testcase classname="Web Login" name="Successful login with valid credentials" time="33.846"/>
+<testsuites time="7.078">
+  <testsuite name="Web Login" failures="1" errors="0" skipped="0" tests="1" time="7.078">
+    <testcase classname="Web Login" name="Successful login with valid credentials" time="7.069">
+      <failure type="NoSuchWindowException" message="Given I open the login page"><![CDATA[Given I open the login page
+
+Traceback (most recent call last):
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\utils\step_wrapper.py", line 9, in step_with_screenshot
+    screenshot = save_screenshot(driver, f"step_{step_name}")
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\utils\screenshot.py", line 14, in save_screenshot
+    driver.save_screenshot(path)
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 882, in save_screenshot
+    return self.get_screenshot_as_file(filename)
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 859, in get_screenshot_as_file
+    png = self.get_screenshot_as_png()
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 890, in get_screenshot_as_png
+    return b64decode(self.get_screenshot_as_base64().encode("ascii"))
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 900, in get_screenshot_as_base64
+    return self.execute(Command.SCREENSHOT)["value"]
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 432, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=143.0.7499.194)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x1131213
+	0x1131254
+	0xf1e6dd
+	0xefca8d
+	0xf91ffb
+	0xfad44c
+	0xf8b2e6
+	0xf5d321
+	0xf5e1d4
+	0x1385254
+	0x138080b
+	0x139d0ea
+	0x114b118
+	0x115311d
+	0x1139518
+	0x11396d9
+	0x1123a68
+	0x765f5d49
+	0x772cd5db
+	0x772cd561
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\radish\stepmodel.py", line 116, in run
+    self.definition_func(self, *args)
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks/radish\steps\web\web_login_steps.py", line 16, in open_login_page
+    step_with_screenshot(
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\utils\step_wrapper.py", line 13, in step_with_screenshot
+    screenshot = save_screenshot(driver, f"FAILED_{step_name}")
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\utils\screenshot.py", line 14, in save_screenshot
+    driver.save_screenshot(path)
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 882, in save_screenshot
+    return self.get_screenshot_as_file(filename)
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 859, in get_screenshot_as_file
+    png = self.get_screenshot_as_png()
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 890, in get_screenshot_as_png
+    return b64decode(self.get_screenshot_as_base64().encode("ascii"))
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 900, in get_screenshot_as_base64
+    return self.execute(Command.SCREENSHOT)["value"]
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 432, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks\.venv\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=143.0.7499.194)
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x1131213
+	0x1131254
+	0xf1e6dd
+	0xefca8d
+	0xf91ffb
+	0xfad44c
+	0xf8b2e6
+	0xf5d321
+	0xf5e1d4
+	0x1385254
+	0x138080b
+	0x139d0ea
+	0x114b118
+	0x115311d
+	0x1139518
+	0x11396d9
+	0x1123a68
+	0x765f5d49
+	0x772cd5db
+	0x772cd561
+
+]]></failure>
+    </testcase>
   </testsuite>
 </testsuites>

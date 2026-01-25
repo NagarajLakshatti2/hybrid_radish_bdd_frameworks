@@ -1,0 +1,3 @@
+junit2html reports/junit-web.xml reports/junit-web.html
+(.venv) PS C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks>
+(.venv) PS C:\Users\nagar\gitworkspacebdd\hybrid_radish_bdd_frameworks> start reports/junit-web.html
