@@ -51,10 +51,7 @@ jobs:
       - name: Generate Cucumber HTML
         run: |
           mkdir -p reports/html
-          npx cucumber-html-reporter \
-            --jsonFile reports/cucumber.json \
-            --output reports/html/index.html \
-            --theme bootstrap
+          npx --yes @cucumber/html-formatter < reports/cucumber.json > reports/html/index.html
 
       # 6️⃣ Upload artifacts
       - name: Upload reports
