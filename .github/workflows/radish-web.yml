@@ -67,7 +67,7 @@ jobs:
 
       # 7️⃣ Deploy to GitHub Pages
       - name: Deploy Cucumber Report
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/cucumberReport'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
