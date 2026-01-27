@@ -76,5 +76,17 @@ jobs:
           publish_dir: reports/html
 
       - name: Deploy Cucumber Report
-        if: always()
+        if: always() && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: publish
+
+
+      - name: Prepare publish directory
+        if: always()
+        run: |
+          mkdir -p publish
+          cp -r reports/html/* publish/
+          cp -r reports/screenshots publish/screenshots
+          cp -r reports/logs publish/logs
