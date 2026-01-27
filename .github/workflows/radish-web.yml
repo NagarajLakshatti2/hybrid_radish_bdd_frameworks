@@ -1,22 +1,16 @@
-name: Quality Platform CI
+name: Cucumber Report (Radish BDD)
 
 on:
   push:
-    branches: [ main, cucumberReport ]
-  pull_request:
-    branches: [ main ]
+    branches: [ cucumberReport ]
   workflow_dispatch:
-  schedule:
-    - cron: "0 2 * * 1-5"
-    - cron: "0 3 * * 0"
+
+permissions:
+  contents: write   # required to push to gh-pages
 
 jobs:
-  quality-tests:
+  radish-tests:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        suite: [ web ]
 
     env:
       PYTHONPATH: ${{ github.workspace }}
@@ -28,32 +22,57 @@ jobs:
       RADISH_TAGS: "@smoke and not @flaky"
 
     steps:
+      # 1️⃣ Checkout source code (cucumberReport branch)
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Prepare report directory
+      # 4️⃣ Run Radish BDD and generate cucumber.json
+      - name: Run Radish BDD
         run: |
           mkdir -p reports
-
-      - name: Run Radish BDD (${{ matrix.suite }})
-        run: |
-          radish features/${{ matrix.suite }} \
+          radish features/web \
             --tags "${RADISH_TAGS}" \
-            --cucumber-json=reports/cucumber-${{ matrix.suite }}.json
+            --cucumber-json=reports/cucumber.json
 
-      - name: Upload Cucumber JSON
-        if: always()
-        uses: actions/upload-artifact@v4
+      # 5️⃣ Prepare GitHub Pages content
+      - name: Prepare Pages content
+        run: |
+          mkdir site
+          cp reports/cucumber.json site/
+
+          cat <<EOF > site/index.html
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>Cucumber Report</title>
+          </head>
+          <body>
+            <h2>Quality Platform – Cucumber Report</h2>
+            <p>
+              <a href="cucumber.json">Download cucumber.json</a>
+            </p>
+            <p>This file is compatible with Jenkins Cucumber Reports plugin.</p>
+          </body>
+          </html>
+          EOF
+
+      # 6️⃣ Deploy to gh-pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: cucumber-${{ matrix.suite }}
-          path: reports/cucumber-${{ matrix.suite }}.json
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: site
