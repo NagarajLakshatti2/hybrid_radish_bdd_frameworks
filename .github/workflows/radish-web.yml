@@ -45,15 +45,17 @@ jobs:
           mkdir -p reports
           radish features/web \
             --tags "${RADISH_TAGS}" \
-            --cucumber-json=reports/cucumber.json
+            --cucumber-json=reports/cucumber.json || true
+
 
       # 5️⃣ Generate Cucumber HTML (Node-based, reliable)
       - name: Generate Cucumber HTML
+        if: always()
         run: |
           mkdir -p reports/html
           npm install cucumber-html-reporter
           node cucumber-html.config.js
-      
+
 
       # 6️⃣ Upload artifacts
       - name: Upload reports
@@ -66,9 +68,13 @@ jobs:
             reports/html
 
       # 7️⃣ Deploy to GitHub Pages
-      - name: Deploy Cucumber Report
-        if: github.ref == 'refs/heads/cucumberReport'
+      - name: Deploy Cucumber Repo
+        if: always() && github.ref == 'refs/heads/cucumberReport'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: reports/html
+
+      - name: Deploy Cucumber Report
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
