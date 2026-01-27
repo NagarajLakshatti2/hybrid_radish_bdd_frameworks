@@ -2,7 +2,7 @@ name: Radish BDD – Cucumber Report
 
 on:
   push:
-    branches: [ cucumberReport, main ]
+    branches: [ main, cucumberReport ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -16,11 +16,9 @@ jobs:
 
     env:
       PYTHONPATH: ${{ github.workspace }}
-
       WEB_BASE_URL: https://rahulshettyacademy.com/loginpagePractise/
       WEB_USERNAME: rahulshettyacademy
       WEB_PASSWORD: ${{ secrets.WEB_PASSWORD }}
-
       RADISH_TAGS: smoke
       HEADLESS: true
 
@@ -33,13 +31,13 @@ jobs:
         with:
           python-version: "3.10"
 
-      # 3️⃣ Install Python deps
+      # 3️⃣ Python dependencies
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4️⃣ Run Radish (SOURCE OF TRUTH)
+      # 4️⃣ Run Radish (never stop pipeline)
       - name: Run Radish BDD
         run: |
           mkdir -p reports
@@ -47,46 +45,34 @@ jobs:
             --tags "${RADISH_TAGS}" \
             --cucumber-json=reports/cucumber.json || true
 
-
-      # 5️⃣ Generate Cucumber HTML (Node-based, reliable)
+      # 5️⃣ Generate Cucumber HTML (YOUR config file)
       - name: Generate Cucumber HTML
         if: always()
         run: |
-          mkdir -p reports/html
           npm install cucumber-html-reporter
           node cucumber-html.config.js
 
-
-      # 6️⃣ Upload artifacts
+      # 6️⃣ Upload artifacts (for download)
       - name: Upload reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cucumber-report
-          path: |
-            reports/cucumber.json
-            reports/html
+          path: reports
 
-      # 7️⃣ Deploy to GitHub Pages
-      - name: Deploy Cucumber Repo
-        if: always() && github.ref == 'refs/heads/cucumberReport'
+      # 7️⃣ Deploy to GitHub Pages (ONLY ONCE)
+      - name: Deploy Cucumber HTML to GitHub Pages
+        if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: reports/html
+          force_orphan: true
 
-      - name: Deploy Cucumber Report
-        if: always() && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: publish
-
-
-      - name: Prepare publish directory
+      # 8️⃣ Print report URL
+      - name: Print Report URL
         if: always()
         run: |
-          mkdir -p publish
-          cp -r reports/html/* publish/
-          cp -r reports/screenshots publish/screenshots
-          cp -r reports/logs publish/logs
+          echo "📊 Cucumber Report URL:"
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
