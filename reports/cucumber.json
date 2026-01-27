@@ -14,9 +14,9 @@
                         "line": 6,
                         "name": "Given I open the login page",
                         "result": {
-                            "duration": 4516167000,
-                            "endtime": "2026-01-27 10:25:12.004150+00:00",
-                            "starttime": "2026-01-27 10:25:07.487983+00:00",
+                            "duration": 4405355000,
+                            "endtime": "2026-01-27 10:47:29.144410+00:00",
+                            "starttime": "2026-01-27 10:47:24.739055+00:00",
                             "status": "passed"
                         }
                     },
@@ -25,9 +25,9 @@
                         "line": 7,
                         "name": "When I login with valid credentials",
                         "result": {
-                            "duration": 242524000,
-                            "endtime": "2026-01-27 10:25:12.246674+00:00",
-                            "starttime": "2026-01-27 10:25:12.004150+00:00",
+                            "duration": 206971000,
+                            "endtime": "2026-01-27 10:47:29.351865+00:00",
+                            "starttime": "2026-01-27 10:47:29.144894+00:00",
                             "status": "passed"
                         }
                     },
@@ -36,9 +36,9 @@
                         "line": 8,
                         "name": "Then I should be logged in",
                         "result": {
-                            "duration": 3859407000,
-                            "endtime": "2026-01-27 10:25:16.106081+00:00",
-                            "starttime": "2026-01-27 10:25:12.246674+00:00",
+                            "duration": 3425557000,
+                            "endtime": "2026-01-27 10:47:32.778418+00:00",
+                            "starttime": "2026-01-27 10:47:29.352861+00:00",
                             "status": "passed"
                         }
                     }
@@ -50,6 +50,60 @@
                     },
                     {
                         "line": 4,
+                        "name": "@regression"
+                    }
+                ],
+                "type": "scenario"
+            },
+            {
+                "description": "",
+                "id": "2",
+                "keyword": "Scenario",
+                "line": 12,
+                "name": "Failed login with Invalid credentials",
+                "steps": [
+                    {
+                        "keyword": "Given",
+                        "line": 13,
+                        "name": "Given I open the login page",
+                        "result": {
+                            "duration": 4138276000,
+                            "endtime": "2026-01-27 10:47:40.597199+00:00",
+                            "starttime": "2026-01-27 10:47:36.458923+00:00",
+                            "status": "passed"
+                        }
+                    },
+                    {
+                        "keyword": "When",
+                        "line": 14,
+                        "name": "When I login with invalid credentials",
+                        "result": {
+                            "duration": 195948000,
+                            "endtime": "2026-01-27 10:47:40.793147+00:00",
+                            "error_message": "division by zero",
+                            "starttime": "2026-01-27 10:47:40.597199+00:00",
+                            "status": "failed"
+                        }
+                    },
+                    {
+                        "keyword": "Then",
+                        "line": 15,
+                        "name": "Then I should be logged in",
+                        "result": {
+                            "duration": 1010000,
+                            "endtime": "2026-01-27 10:47:40.795153+00:00",
+                            "starttime": "2026-01-27 10:47:40.794143+00:00",
+                            "status": "skipped"
+                        }
+                    }
+                ],
+                "tags": [
+                    {
+                        "line": 10,
+                        "name": "@smoke"
+                    },
+                    {
+                        "line": 11,
                         "name": "@regression"
                     }
                 ],
