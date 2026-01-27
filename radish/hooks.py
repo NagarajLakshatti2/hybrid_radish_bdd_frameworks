@@ -4,11 +4,18 @@ from utils.cleanup import clean_previous_artifacts
 from utils.screenshot import take_screenshot
 from utils.logger import get_scenario_logger
 
-def before_all(context):
-    logger = get_scenario_logger()
-    print("before all logger: ", logger.__str__())
+
+# =========================
+# BEFORE ALL (ONE TIME)
+# =========================
+@before.all
+def before_all(features, **kwargs):
     clean_previous_artifacts()
 
+
+# =========================
+# BEFORE EACH SCENARIO
+# =========================
 @before.each_scenario
 def start_browser(scenario):
     logger, log_path = get_scenario_logger(scenario.id)
@@ -21,31 +28,42 @@ def start_browser(scenario):
     logger.info(f"Log file: {log_path}")
 
 
+# =========================
+# AFTER EACH SCENARIO
+# =========================
 @after.each_scenario
 def after_scenario(scenario):
     logger = scenario.context.logger
     driver = getattr(scenario.context, "driver", None)
 
+    # ---------- Always take scenario screenshot ----------
     if driver:
-        path = take_screenshot(driver, f"SCENARIO_{scenario.id}")
-        logger.info(f"Scenario screenshot: {path}")
+        scenario_path = take_screenshot(driver, f"SCENARIO_{scenario.id}")
+        scenario_rel = scenario_path.replace("reports/", "")
+        logger.info(f"Scenario Screenshot: {scenario_rel}")
 
+    # ---------- On failure ----------
     if scenario.state == "failed" and driver:
         fail_path = take_screenshot(driver, f"FAILED_{scenario.id}")
-        logger.error(f"FAILED screenshot: {fail_path}")
+        fail_rel = fail_path.replace("reports/", "")
+        log_rel = scenario.context.log_path.replace("reports/", "")
 
-        # 👇 Inject links into failure message
+        logger.error(f"FAILED Screenshot: {fail_rel}")
+
+        # 👇 This text appears INSIDE Cucumber HTML
         scenario.exception = Exception(
             f"""
-        ❌ Scenario Failed
+Scenario Failed
 
-        📸 Screenshot:
-        {fail_path}
+Screenshot:
+{fail_rel}
 
-        📄 Logs:
-        {scenario.context.log_path}
-        """
+Logs:
+{log_rel}
+"""
         )
+
+    logger.info(f"END Scenario id={scenario.id}")
 
     if driver:
         driver.quit()
