@@ -6,43 +6,59 @@ JSON_FILE = "reports/cucumber.json"
 SCREENSHOT_DIR = Path("reports/screenshots")
 LOG_DIR = Path("reports/logs")
 
+
+def b64(path: Path) -> str:
+    return base64.b64encode(path.read_bytes()).decode("utf-8")
+
+
 with open(JSON_FILE, "r", encoding="utf-8") as f:
     data = json.load(f)
 
+
 for feature in data:
-    for scenario in feature["elements"]:
+    for scenario in feature.get("elements", []):
         sid = scenario["id"]
 
-        for step in scenario["steps"]:
-            if step["result"]["status"] == "failed":
-                embeddings = []
+        scenario_log = LOG_DIR / f"scenario_{sid}.log"
+        scenario_logs_b64 = (
+            b64(scenario_log) if scenario_log.exists() else None
+        )
 
-                # ---- SCREENSHOT (BASE64) ----
-                screenshot = next(
-                    SCREENSHOT_DIR.glob(f"FAILED_{sid}_*.png"), None
-                )
-                if screenshot:
-                    embeddings.append({
-                        "mime_type": "image/png",
-                        "data": base64.b64encode(
-                            screenshot.read_bytes()
-                        ).decode("utf-8")
-                    })
+        for step in scenario.get("steps", []):
+            status = step["result"]["status"]
 
-                # ---- LOG FILE (BASE64) ----
-                log_file = LOG_DIR / f"scenario_{sid}.log"
-                if log_file.exists():
-                    embeddings.append({
-                        "mime_type": "text/plain",
-                        "data": base64.b64encode(
-                            log_file.read_bytes()
-                        ).decode("utf-8")
-                    })
+            embeddings = []
 
-                if embeddings:
-                    step["embeddings"] = embeddings
+            # ============================
+            # SCREENSHOT (PASS + FAIL)
+            # ============================
+            shot = next(
+                SCREENSHOT_DIR.glob(f"*_{sid}_*.png"),
+                None
+            )
+            if shot:
+                embeddings.append({
+                    "mime_type": "image/png",
+                    "data": b64(shot)
+                })
+
+            # ============================
+            # LOG FILE (PASS + FAIL)
+            # ============================
+            if scenario_logs_b64:
+                embeddings.append({
+                    "mime_type": "text/plain",
+                    "data": scenario_logs_b64
+                })
+
+            # ============================
+            # ATTACH ONLY IF EXISTS
+            # ============================
+            if embeddings:
+                step["embeddings"] = embeddings
+
 
 with open(JSON_FILE, "w", encoding="utf-8") as f:
     json.dump(data, f, indent=2)
 
-print("✅ Screenshot + logs embedded correctly")
+print("✅ PASS + FAIL step screenshots & logs embedded")

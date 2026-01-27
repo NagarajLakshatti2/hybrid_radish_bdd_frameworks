@@ -26,6 +26,9 @@ def start_browser(scenario):
     scenario.context.log_path = log_path
     scenario.context.driver = get_web_driver()
 
+    # ✅ ADD THIS LINE (CRITICAL)
+    scenario.context.scenario_id = scenario.id
+
     logger.info(f"START Scenario id={scenario.id}")
     logger.info(f"Log file: {log_path}")
 
@@ -60,3 +63,8 @@ def after_scenario(scenario):
 
     driver.quit()
     logger.info(f"END Scenario id={scenario.id}")
+
+@before.each_step
+def before_each_step(step):
+    ctx = step.context
+    ctx._current_step_index = getattr(ctx, "_current_step_index", -1) + 1
