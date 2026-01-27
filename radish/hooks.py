@@ -1,12 +1,14 @@
+# radish/hooks.py
 from radish import before, after
 from utils.browser import get_web_driver
 from utils.cleanup import clean_previous_artifacts
 from utils.screenshot import take_screenshot
 from utils.logger import get_scenario_logger
+import os
 
 
 # =========================
-# BEFORE ALL (ONE TIME)
+# BEFORE ALL
 # =========================
 @before.all
 def before_all(features, **kwargs):
@@ -34,32 +36,27 @@ def start_browser(scenario):
 @after.each_scenario
 def after_scenario(scenario):
     logger = scenario.context.logger
-    driver = getattr(scenario.context, "driver", None)
+    driver = scenario.context.driver
 
-    # ---------- Always take scenario screenshot ----------
-    if driver:
-        scenario_path = take_screenshot(driver, f"SCENARIO_{scenario.id}")
-        scenario_rel = scenario_path.replace("reports/", "")
-        logger.info(f"Scenario Screenshot: {scenario_rel}")
+    # ---- Always screenshot ----
+    scenario_path = take_screenshot(driver, f"SCENARIO_{scenario.id}")
+    scenario_rel = os.path.relpath(scenario_path, "reports")
+    logger.info(f"Scenario Screenshot: {scenario_rel}")
 
-    # ---------- On failure ----------
-    if scenario.state == "failed" and driver:
+    # ---- On failure: inject LINKS into cucumber.json ----
+    if scenario.state == "failed":
         fail_path = take_screenshot(driver, f"FAILED_{scenario.id}")
-        fail_rel = fail_path.replace("reports/", "")
-        log_rel = scenario.context.log_path.replace("reports/", "")
+        fail_rel = os.path.relpath(fail_path, "reports")
+        log_rel = os.path.relpath(scenario.context.log_path, "reports")
 
         logger.error(f"FAILED Screenshot: {fail_rel}")
 
-        # 👇 This text appears INSIDE Cucumber HTML
+        # ✅ THIS goes into cucumber.json → HTML
         scenario.exception = Exception(
-            f"""
-        FAILED SCENARIO
-
-        Screenshot: reports/screenshots/FAILED_{scenario.id}.png
-        Logs: reports/logs/scenario_{scenario.id}.log
-        """
+            "FAILED SCENARIO\n\n"
+            f"Screenshot:\n{fail_rel}\n\n"
+            f"Logs:\n{log_rel}"
         )
 
-
-    if driver:
-        driver.quit()
+    driver.quit()
+    logger.info(f"END Scenario id={scenario.id}")
