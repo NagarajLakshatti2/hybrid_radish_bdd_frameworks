@@ -7,8 +7,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# REQUIRED for GitHub Pages
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   radish-tests:
@@ -21,7 +22,8 @@ jobs:
       WEB_USERNAME: rahulshettyacademy
       WEB_PASSWORD: ${{ secrets.WEB_PASSWORD }}
 
-      RADISH_TAGS: "smoke"
+      RADISH_TAGS: smoke
+      HEADLESS: true
 
     steps:
       # 1️⃣ Checkout source
@@ -39,8 +41,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install cucumber-html-report
 
-      # 4️⃣ Run Radish BDD (SAME AS LOCAL)
+      # 4️⃣ Run Radish BDD
       - name: Run Radish BDD
         run: |
           mkdir -p reports
@@ -48,10 +51,12 @@ jobs:
             --tags "${RADISH_TAGS}" \
             --cucumber-json=reports/cucumber.json
 
-      # 5️⃣ Upload Cucumber JSON artifact
-      - name: Upload Cucumber report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cucumber-report
-          path: reports/cucumber.json
+      # 5️⃣ Generate Cucumber HTML
+      - name: Generate Cucumber HTML
+        run: |
+          mkdir -p reports/html
+          cucumber-html-report \
+            --json reports/cucumber.json \
+            --output reports/html
+
+      # 6️⃣ Upload artifacts (JSON +
