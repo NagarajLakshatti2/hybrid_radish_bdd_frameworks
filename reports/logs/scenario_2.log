@@ -1,0 +1,12 @@
+2026-01-27 17:06:38,517 | INFO    | START Scenario id=2
+2026-01-27 17:06:38,517 | INFO    | Log file: reports/logs\scenario_2.log
+2026-01-27 17:06:41,926 | INFO    | Opened login page
+2026-01-27 17:06:42,152 | ERROR   | Login failed with invalid credentials
+2026-01-27 17:06:42,476 | INFO    | Scenario screenshot: reports/screenshots/SCENARIO_2_20260127_170642.png
+2026-01-27 17:06:42,796 | ERROR   | FAILED screenshot: reports/screenshots/FAILED_2_20260127_170642.png
+2026-01-27 17:07:42,311 | INFO    | START Scenario id=2
+2026-01-27 17:07:42,311 | INFO    | Log file: reports/logs\scenario_2.log
+2026-01-27 17:07:45,927 | INFO    | Opened login page
+2026-01-27 17:07:46,464 | ERROR   | Login failed with invalid credentials
+2026-01-27 17:07:47,936 | INFO    | Scenario screenshot: reports/screenshots/SCENARIO_2_20260127_170746.png
+2026-01-27 17:07:49,390 | ERROR   | FAILED screenshot: reports/screenshots/FAILED_2_20260127_170747.png
