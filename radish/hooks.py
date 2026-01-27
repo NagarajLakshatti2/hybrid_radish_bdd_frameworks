@@ -1,19 +1,23 @@
 from radish import before, after
 from utils.browser import get_web_driver
 from utils.screenshot import take_screenshot, attach_screenshot_to_step
-from utils.logger import log_info, log_error
-
+from utils.logger import get_logger
 
 
 @before.each_scenario
 def start_browser(scenario, **kwargs):
+    logger, log_path = get_logger(scenario.id)
+    scenario.context.logger = logger
+    scenario.context.log_path = log_path
+
+    logger.info("Starting scenario")
     scenario.context.driver = get_web_driver()
-    log_info(f"Starting scenario: [id={scenario.id}]")
+
 
 
 @after.each_scenario
 def stop_browser(scenario, **kwargs):
-    log_info(f"Ending scenario: [id={scenario.id}]")
+    get_logger(f"Ending scenario: [id={scenario.id}]")
     driver = getattr(scenario.context, "driver", None)
     if driver:
         driver.quit()
@@ -22,13 +26,13 @@ def stop_browser(scenario, **kwargs):
 @after.each_scenario
 def screenshot_on_failure(scenario):
     if scenario.state == "failed":
-        log_error(f"Scenario FAILED: [id={scenario.id}]")
+        get_logger(f"Scenario FAILED: [id={scenario.id}]")
 
         driver = getattr(scenario.context, "driver", None)
         if driver:
             path = take_screenshot(driver, "FAILED")
             if path:
-                log_info(f"Screenshot saved: {path}")
+                get_logger(f"Screenshot saved: {path}")
 
 
 @after.each_scenario

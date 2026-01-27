@@ -5,13 +5,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from utils.config import WEB_BASE_URL, WEB_USERNAME, WEB_PASSWORD
-from utils.logger import log_info, log_error
+from utils.logger import get_logger
 
 
 @given(r"I open the login page")
 def open_login_page(step):
     step.context.driver.get(WEB_BASE_URL)
-    log_info("Opened login page successfully")
+    get_logger("Opened login page successfully")
 
 
 @when(r"I login with valid credentials")
@@ -32,7 +32,7 @@ def login(step):
     password.send_keys(WEB_PASSWORD)
 
     sign_in.click()
-    log_info("User login successfully")
+    get_logger("User login successfully")
 
 
 @then("I should be logged in")
@@ -43,5 +43,5 @@ def verify_login(step):
     wait.until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, ".nav-link"))
     )
-    log_info("User logged in successfully")
+    get_logger("User logged in successfully")
 

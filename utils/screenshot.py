@@ -33,3 +33,5 @@ def attach_screenshot_to_step(step, file_path):
         mime_type="image/png",
         description="Screenshot"
     )
+
+
