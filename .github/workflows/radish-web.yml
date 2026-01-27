@@ -1,12 +1,14 @@
-name: Cucumber Report (Radish BDD)
+name: Radish BDD – Cucumber Report
 
 on:
   push:
-    branches: [ cucumberReport ]
+    branches: [ cucumberReport, main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
-  contents: write   # required to push to gh-pages
+  contents: read
 
 jobs:
   radish-tests:
@@ -19,10 +21,10 @@ jobs:
       WEB_USERNAME: rahulshettyacademy
       WEB_PASSWORD: ${{ secrets.WEB_PASSWORD }}
 
-      RADISH_TAGS: "@smoke and not @flaky"
+      RADISH_TAGS: "smoke"
 
     steps:
-      # 1️⃣ Checkout source code (cucumberReport branch)
+      # 1️⃣ Checkout source
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -38,7 +40,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4️⃣ Run Radish BDD and generate cucumber.json
+      # 4️⃣ Run Radish BDD (SAME AS LOCAL)
       - name: Run Radish BDD
         run: |
           mkdir -p reports
@@ -46,33 +48,10 @@ jobs:
             --tags "${RADISH_TAGS}" \
             --cucumber-json=reports/cucumber.json
 
-      # 5️⃣ Prepare GitHub Pages content
-      - name: Prepare Pages content
-        run: |
-          mkdir site
-          cp reports/cucumber.json site/
-
-          cat <<EOF > site/index.html
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <meta charset="UTF-8">
-            <title>Cucumber Report</title>
-          </head>
-          <body>
-            <h2>Quality Platform – Cucumber Report</h2>
-            <p>
-              <a href="cucumber.json">Download cucumber.json</a>
-            </p>
-            <p>This file is compatible with Jenkins Cucumber Reports plugin.</p>
-          </body>
-          </html>
-          EOF
-
-      # 6️⃣ Deploy to gh-pages
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      # 5️⃣ Upload Cucumber JSON artifact
+      - name: Upload Cucumber report
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: site
+          name: cucumber-report
+          path: reports/cucumber.json

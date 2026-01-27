@@ -1,0 +1,67 @@
+[
+    {
+        "description": "",
+        "elements": [
+            {
+                "description": "",
+                "id": "1",
+                "keyword": "Scenario",
+                "line": 5,
+                "name": "Successful login with valid credentials",
+                "steps": [
+                    {
+                        "keyword": "Given",
+                        "line": 6,
+                        "name": "Given I open the login page",
+                        "result": {
+                            "duration": 5736484000,
+                            "endtime": "2026-01-27 07:26:11.771773+00:00",
+                            "starttime": "2026-01-27 07:26:06.035289+00:00",
+                            "status": "passed"
+                        }
+                    },
+                    {
+                        "keyword": "When",
+                        "line": 7,
+                        "name": "When I login with valid credentials",
+                        "result": {
+                            "duration": 9873371000,
+                            "endtime": "2026-01-27 07:26:21.660123+00:00",
+                            "starttime": "2026-01-27 07:26:11.786752+00:00",
+                            "status": "passed"
+                        }
+                    },
+                    {
+                        "keyword": "Then",
+                        "line": 8,
+                        "name": "Then I should be logged in",
+                        "result": {
+                            "duration": 4410416000,
+                            "endtime": "2026-01-27 07:26:26.072571+00:00",
+                            "starttime": "2026-01-27 07:26:21.662155+00:00",
+                            "status": "passed"
+                        }
+                    }
+                ],
+                "tags": [
+                    {
+                        "line": 3,
+                        "name": "@smoke"
+                    },
+                    {
+                        "line": 4,
+                        "name": "@regression"
+                    }
+                ],
+                "type": "scenario"
+            }
+        ],
+        "id": "1",
+        "keyword": "Feature",
+        "line": 1,
+        "name": "Web Login",
+        "tags": [],
+        "type": "feature",
+        "uri": "features/web\\login.feature"
+    }
+]
