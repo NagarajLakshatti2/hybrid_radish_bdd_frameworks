@@ -14,9 +14,9 @@
                         "line": 6,
                         "name": "Given I open the login page",
                         "result": {
-                            "duration": 5546007000,
-                            "endtime": "2026-01-27 12:38:07.064848+00:00",
-                            "starttime": "2026-01-27 12:38:01.518841+00:00",
+                            "duration": 4544155000,
+                            "endtime": "2026-01-27 12:50:26.932492+00:00",
+                            "starttime": "2026-01-27 12:50:22.388337+00:00",
                             "status": "passed"
                         }
                     },
@@ -25,9 +25,9 @@
                         "line": 7,
                         "name": "When I login with valid credentials",
                         "result": {
-                            "duration": 551982000,
-                            "endtime": "2026-01-27 12:38:07.616830+00:00",
-                            "starttime": "2026-01-27 12:38:07.064848+00:00",
+                            "duration": 1205090000,
+                            "endtime": "2026-01-27 12:50:28.137582+00:00",
+                            "starttime": "2026-01-27 12:50:26.932492+00:00",
                             "status": "passed"
                         }
                     },
@@ -36,9 +36,9 @@
                         "line": 8,
                         "name": "Then I should be logged in",
                         "result": {
-                            "duration": 3565396000,
-                            "endtime": "2026-01-27 12:38:11.182226+00:00",
-                            "starttime": "2026-01-27 12:38:07.616830+00:00",
+                            "duration": 4791466000,
+                            "endtime": "2026-01-27 12:50:32.929048+00:00",
+                            "starttime": "2026-01-27 12:50:28.137582+00:00",
                             "status": "passed"
                         }
                     }
@@ -67,9 +67,9 @@
                         "line": 13,
                         "name": "Given I open the login page",
                         "result": {
-                            "duration": 3936257000,
-                            "endtime": "2026-01-27 12:38:16.998729+00:00",
-                            "starttime": "2026-01-27 12:38:13.062472+00:00",
+                            "duration": 5139167000,
+                            "endtime": "2026-01-27 12:50:43.224232+00:00",
+                            "starttime": "2026-01-27 12:50:38.085065+00:00",
                             "status": "passed"
                         }
                     },
@@ -78,10 +78,10 @@
                         "line": 14,
                         "name": "When I login with invalid credentials",
                         "result": {
-                            "duration": 500951000,
-                            "endtime": "2026-01-27 12:38:17.499680+00:00",
+                            "duration": 1332429000,
+                            "endtime": "2026-01-27 12:50:44.556661+00:00",
                             "error_message": "Invalid login scenario failed as expected",
-                            "starttime": "2026-01-27 12:38:16.998729+00:00",
+                            "starttime": "2026-01-27 12:50:43.224232+00:00",
                             "status": "failed"
                         }
                     },
@@ -91,8 +91,8 @@
                         "name": "Then I should be logged in",
                         "result": {
                             "duration": 0,
-                            "endtime": "2026-01-27 12:38:17.499680+00:00",
-                            "starttime": "2026-01-27 12:38:17.499680+00:00",
+                            "endtime": "2026-01-27 12:50:44.566957+00:00",
+                            "starttime": "2026-01-27 12:50:44.566957+00:00",
                             "status": "skipped"
                         }
                     }

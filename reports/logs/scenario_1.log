@@ -1,7 +1,6 @@
-2026-01-27 18:08:01,517 | INFO    | START Scenario id=1
-2026-01-27 18:08:01,518 | INFO    | Log file: reports/logs\scenario_1.log
-2026-01-27 18:08:07,064 | INFO    | Opened login page
-2026-01-27 18:08:07,616 | INFO    | Login with valid credentials submitted
-2026-01-27 18:08:11,182 | INFO    | User logged in successfully
-2026-01-27 18:08:11,304 | INFO    | Scenario Screenshot: screenshots/SCENARIO_1_20260127_180811.png
-2026-01-27 18:08:11,304 | INFO    | END Scenario id=1
+2026-01-27 18:20:22,385 | INFO    | START Scenario id=1
+2026-01-27 18:20:22,388 | INFO    | Log file: reports/logs\scenario_1.log
+2026-01-27 18:20:26,932 | INFO    | Opened login page
+2026-01-27 18:20:28,137 | INFO    | Login with valid credentials submitted
+2026-01-27 18:20:32,929 | INFO    | User logged in successfully
+2026-01-27 18:20:33,290 | INFO    | Scenario Screenshot: screenshots/SCENARIO_1_20260127_182032.png

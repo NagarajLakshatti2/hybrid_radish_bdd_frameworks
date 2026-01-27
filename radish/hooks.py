@@ -53,17 +53,13 @@ def after_scenario(scenario):
         # 👇 This text appears INSIDE Cucumber HTML
         scenario.exception = Exception(
             f"""
-Scenario Failed
+        FAILED SCENARIO
 
-Screenshot:
-{fail_rel}
-
-Logs:
-{log_rel}
-"""
+        Screenshot: reports/screenshots/FAILED_{scenario.id}.png
+        Logs: reports/logs/scenario_{scenario.id}.log
+        """
         )
 
-    logger.info(f"END Scenario id={scenario.id}")
 
     if driver:
         driver.quit()
