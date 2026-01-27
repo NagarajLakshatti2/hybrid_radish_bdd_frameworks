@@ -1,27 +1,23 @@
+# utils/logger.py
 import logging
 import os
 
 LOG_DIR = "reports/logs"
 os.makedirs(LOG_DIR, exist_ok=True)
 
-def get_logger(scenario_id):
-    log_path = f"{LOG_DIR}/scenario_{scenario_id}.log"
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-7s | %(message)s",
+    handlers=[
+        logging.FileHandler(os.path.join(LOG_DIR, "execution.log")),
+        logging.StreamHandler()
+    ]
+)
 
-    logger = logging.getLogger(f"scenario_{scenario_id}")
-    logger.setLevel(logging.INFO)
-    logger.handlers.clear()
+logger = logging.getLogger("radish")
 
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)s | %(message)s"
-    )
+def log_info(msg):
+    logger.info(msg)
 
-    fh = logging.FileHandler(log_path)
-    fh.setFormatter(formatter)
-
-    sh = logging.StreamHandler()
-    sh.setFormatter(formatter)
-
-    logger.addHandler(fh)
-    logger.addHandler(sh)
-
-    return logger, log_path
+def log_error(msg):
+    logger.error(msg)
