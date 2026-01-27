@@ -1,0 +1,9 @@
+2026-01-27 14:49:56,838 | INFO    | OK
+2026-01-27 15:03:56,016 | INFO    | Starting scenario: [id=1]
+2026-01-27 15:04:00,175 | INFO    | Opened login page successfully
+2026-01-27 15:04:00,415 | INFO    | User login successfully
+2026-01-27 15:04:04,393 | INFO    | User logged in successfully
+2026-01-27 15:04:04,394 | INFO    | Ending scenario: [id=1]
+2026-01-27 15:04:10,583 | WARNING | Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=50221): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/f03cc7f18a2f02cc47091abc297c900b/screenshot
+2026-01-27 15:04:14,697 | WARNING | Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=50221): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/f03cc7f18a2f02cc47091abc297c900b/screenshot
+2026-01-27 15:04:18,769 | WARNING | Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=50221): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/f03cc7f18a2f02cc47091abc297c900b/screenshot

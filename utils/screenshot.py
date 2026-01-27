@@ -1,37 +1,35 @@
 import os
-import allure
-from allure_commons.types import AttachmentType
-
-
-def attach_screenshot(driver, name="Failure Screenshot"):
-    if not driver:
-        return
-    png = driver.get_screenshot_as_png()
-    allure.attach(
-        png,
-        name=name,
-        attachment_type=AttachmentType.PNG
-    )
-
-def attach_debug_info(driver):
-    allure.attach(
-        driver.current_url,
-        name="Current URL",
-        attachment_type=AttachmentType.TEXT
-    )
-    allure.attach(
-        driver.title,
-        name="Page Title",
-        attachment_type=AttachmentType.TEXT
-    )
-
-import os
+import base64
 from datetime import datetime
 
-def save_screenshot(driver, scenario_name):
-    os.makedirs("reports/screenshots", exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{scenario_name}_{timestamp}.png".replace(" ", "_")
-    path = os.path.join("reports/screenshots", filename)
-    driver.save_screenshot(path)
+def _safe_name(name):
+    return "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in name)
 
+def take_screenshot(driver, name="screenshot"):
+    if driver is None:
+        return None
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    os.makedirs("reports/screenshots", exist_ok=True)
+
+    safe_name = _safe_name(name)
+    file_path = f"reports/screenshots/{safe_name}_{timestamp}.png"
+
+    try:
+        driver.save_screenshot(file_path)
+        return file_path
+    except Exception:
+        return None
+
+def attach_screenshot_to_step(step, file_path):
+    if not file_path or not os.path.exists(file_path):
+        return
+
+    with open(file_path, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode("utf-8")
+
+    step.attach(
+        encoded,
+        mime_type="image/png",
+        description="Screenshot"
+    )

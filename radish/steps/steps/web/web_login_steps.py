@@ -5,16 +5,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from utils.config import WEB_BASE_URL, WEB_USERNAME, WEB_PASSWORD
+from utils.logger import log_info, log_error
 
 
 @given(r"I open the login page")
-@allure.step("I open the login page")
 def open_login_page(step):
     step.context.driver.get(WEB_BASE_URL)
+    log_info("Opened login page successfully")
 
 
 @when(r"I login with valid credentials")
-@allure.step("I login with valid credentials")
 def login(step):
     driver = step.context.driver
     wait = WebDriverWait(driver, 10)
@@ -32,13 +32,10 @@ def login(step):
     password.send_keys(WEB_PASSWORD)
 
     sign_in.click()
+    log_info("User login successfully")
 
 
 @then("I should be logged in")
-@allure.step("Verify user is logged in")
-@allure.label("owner", "Nagaraj Lakshatti")
-@allure.label("severity", "critical")
-@allure.label("type", "e2e")
 def verify_login(step):
     driver = step.context.driver
     wait = WebDriverWait(driver, 10)
@@ -46,3 +43,5 @@ def verify_login(step):
     wait.until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, ".nav-link"))
     )
+    log_info("User logged in successfully")
+
