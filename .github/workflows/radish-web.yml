@@ -45,11 +45,18 @@ jobs:
             --tags "${RADISH_TAGS}" \
             --cucumber-json=reports/cucumber.json || true
 
+      # 🔥 4.5️⃣ Inject screenshots + logs into cucumber.json
+      - name: Inject attachments into cucumber.json
+        if: always()
+        run: |
+          python inject_attachments.py
+
       # 5️⃣ Generate Cucumber HTML (YOUR config file)
       - name: Generate Cucumber HTML
         if: always()
         run: |
           npm install cucumber-html-reporter
+          node cucumber-html.config.js
           node cucumber-html.config.js
 
       # 6️⃣ Upload artifacts (for download)
