@@ -1,5 +1,7 @@
 # radish/hooks.py
 from radish import before, after
+
+from inject_attachments import inject_attachments
 from utils.browser import get_web_driver
 from utils.cleanup import clean_previous_artifacts
 from utils.screenshot import take_screenshot
@@ -68,3 +70,6 @@ def after_scenario(scenario):
 def before_each_step(step):
     ctx = step.context
     ctx._current_step_index = getattr(ctx, "_current_step_index", -1) + 1
+
+def after_all(features, **kwargs):
+    inject_attachments()

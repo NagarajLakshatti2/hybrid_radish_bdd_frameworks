@@ -4,48 +4,41 @@ FROM python:3.10-slim
 # System dependencies
 # -------------------------
 RUN apt-get update && apt-get install -y \
-    wget \
-    unzip \
-    curl \
-    gnupg \
-    ca-certificates \
-    chromium \
-    chromium-driver \
-    nodejs \
-    npm \
+    wget unzip curl gnupg ca-certificates \
+    chromium chromium-driver \
+    nodejs npm \
     && rm -rf /var/lib/apt/lists/*
 
 # -------------------------
 # Environment
 # -------------------------
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONPATH=/app
-ENV HEADLESS=true
-ENV CHROME_BIN=/usr/bin/chromium
-ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
+ENV PYTHONUNBUFFERED=1 \
+    HEADLESS=true \
+    CHROME_BIN=/usr/bin/chromium \
+    CHROMEDRIVER_PATH=/usr/bin/chromedriver \
+    PYTHONPATH=/app:/quality-platform
 
-# -------------------------
-# Workdir
-# -------------------------
 WORKDIR /app
 
 # -------------------------
 # Python deps
 # -------------------------
 COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt
 
 # -------------------------
-# Node deps (HTML report)
+# Source code
 # -------------------------
-RUN npm install cucumber-html-reporter
+COPY quality-platform /quality-platform
+COPY . .
 
 # -------------------------
-# Project files
+# Runner script
 # -------------------------
-COPY docker .
+CMD ["python", "run_and_report.py"]
 
-# -------------------------
-# Default command
-# -------------------------
-CMD bash docker-run.sh
+
+
+
+

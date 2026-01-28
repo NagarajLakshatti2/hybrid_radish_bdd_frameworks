@@ -11,7 +11,7 @@ const options = {
     "Test Framework": "Radish BDD",
     "Language": "Python",
     "Browser": "Chrome",
-    "Platform": "GitHub Actions"
+    "Platform": "GitHub Pages"
   }
 };
 

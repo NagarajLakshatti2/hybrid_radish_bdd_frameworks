@@ -1,0 +1,7 @@
+.venv
+.git
+.gitignore
+node_modules
+__pycache__
+allure-results
+allure-report
