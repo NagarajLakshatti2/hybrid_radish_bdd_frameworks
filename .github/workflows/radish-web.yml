@@ -2,7 +2,7 @@ name: Radish BDD – Cucumber Report
 
 on:
   push:
-    branches: [ main, cucumberReport ]
+    branches: [ main, docker ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
