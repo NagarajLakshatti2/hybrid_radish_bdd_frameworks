@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <state path="root" />
+        </expanded-state>
+        <selected-state>
+          <state path="root" />
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+      <inspection_tool class="PyUnresolvedReferenceInspection" enabled="true" level="WARNING" enabled_by_default="true">
+        <option name="ignoredIdentifiers">
+          <set>
+            <item>radish.step.*</item>
+            <item>radish.given</item>
+            <item>radish.when</item>
+            <item>radish.then</item>
+            <item>radish.decorators.*</item>
+          </set>
+        </option>
+      </inspection_tool>
+    </profile>
+  </component>
+</project>
+

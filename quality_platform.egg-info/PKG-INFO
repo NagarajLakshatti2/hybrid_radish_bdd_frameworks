@@ -1,9 +1,0 @@
-Metadata-Version: 2.4
-Name: quality-platform
-Version: 1.0.0
-Summary: Quality Engineering Platform CLI
-Requires-Python: >=3.10
-Requires-Dist: typer>=0.9.0
-Requires-Dist: pyyaml
-Requires-Dist: scikit-learn
-Requires-Dist: joblib

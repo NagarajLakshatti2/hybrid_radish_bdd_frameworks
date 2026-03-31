@@ -2,6 +2,7 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/radish/steps" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11 (hybrid_radish_bdd_frameworks) (2)" jdkType="Python SDK" />

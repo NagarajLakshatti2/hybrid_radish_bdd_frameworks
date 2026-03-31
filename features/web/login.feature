@@ -7,10 +7,10 @@ Scenario: Successful login with valid credentials
   When I login with valid credentials
   Then I should be logged in
 
-  @smoke
+@smoke
 @regression
-Scenario: Failed login with Invalid credentials
+Scenario: Failed login with invalid credentials
   Given I open the login page
   When I login with invalid credentials
-  Then I should be logged in
+  Then login should fail
 
